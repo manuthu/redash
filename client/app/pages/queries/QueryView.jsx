@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { react2angular } from "react2angular";
 import cx from "classnames";
 import { has } from "lodash";
+import useMedia from "use-media";
 
 import EditInPlace from "@/components/EditInPlace";
 import Parameters from "@/components/Parameters";
@@ -33,7 +34,6 @@ import useEditVisualizationDialog from "./hooks/useEditVisualizationDialog";
 import useDeleteVisualization from "./hooks/useDeleteVisualization";
 
 import "./QueryView.less";
-import useMedia from "use-media";
 
 // ANGULAR_REMOVE_ME: Update with new Router
 function updateUrlSearch(...params) {
@@ -58,7 +58,7 @@ function QueryView(props) {
   const queryFlags = useQueryFlags(query, dataSource);
   const [parameters, areParametersDirty, updateParametersDirtyFlag] = useQueryParameters(query);
   const [selectedVisualization, setSelectedVisualization] = useVisualizationTabHandler(query.visualizations);
-  const isMobile = useMedia({ maxWidth: 768 });
+  const isMobile = !useMedia({ minWidth: 768 });
   const [fullscreen, toggleFullscreen] = useFullscreenHandler(!isMobile);
 
   const {
@@ -230,7 +230,6 @@ export default function init(ngModule) {
     "/queries/:queryId": {
       template: '<page-query-view query="$resolve.query"></page-query-view>',
       reloadOnSearch: false,
-      layout: "fixed",
       resolve: {
         query: $route => {
           "ngInject";
